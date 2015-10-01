@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+    <metadata>
+        <id>JSONAPI.Structuremap</id>
+        <version>$version$</version>
+        <title>JSONAPI.NET StrcutureMap</title>
+        <authors>S'pht'Kr</authors>
+        <owners>S'pht'Kr</owners>
+        <licenseUrl>https://github.com/SphtKr/JSONAPI.NET/blob/master/LICENSE.md</licenseUrl>
+        <projectUrl>https://github.com/SphtKr/JSONAPI.NET</projectUrl>
+        <iconUrl>https://raw.githubusercontent.com/SphtKr/JSONAPI.NET/master/JSONAPI/JSONAPI_NET_icon_512.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>A toolkit for using WebAPI to quickly build REST services complying with the JSON API spec (jsonapi.org).</description>
+        <releaseNotes>Bugfix: supports Byte as ID value</releaseNotes>
+        <copyright>Copyright 2014</copyright>
+        <tags>JSON WebAPI REST ember emberjs ember.js ember-data</tags>
+        <dependencies>
+            <dependency id="JSONAPI" version="[0.0.9,1.0.0)" />
+			<dependency id="structuremap" version="[3.1.6,4.0.0)" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\build\JSONAPI.StructureMap\JSONAPI.StructureMap.???" target="lib\net45\" />
+    </files>
+</package>
