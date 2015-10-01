@@ -14,6 +14,7 @@ namespace JSONAPI.Core
         IResourceTypeRegistration BuildRegistration(Type type,
             string resourceTypeName = null,
             Func<ParameterExpression, string, BinaryExpression> filterByIdFactory = null,
-            Func<ParameterExpression, Expression> sortByIdFactory = null);
+            Func<ParameterExpression, Expression> sortByIdFactory = null,
+            string[] includeRelationships = null);
     }
 }

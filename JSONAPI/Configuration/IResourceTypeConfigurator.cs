@@ -44,5 +44,10 @@ namespace JSONAPI.Configuration
         /// </summary>
          void OverrideDefaultSortById(Func<ParameterExpression, Expression> sortByIdExpressionFactory);
 
+         /// <summary>
+         /// Defaults the resource type to be included by default
+         /// </summary>
+         /// <param name="property"></param>
+         void AlwaysInclude(Expression<Func<TResourceType, object>> property);
     }
 }

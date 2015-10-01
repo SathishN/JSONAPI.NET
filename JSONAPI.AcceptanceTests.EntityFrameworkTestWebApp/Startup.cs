@@ -50,6 +50,8 @@ namespace JSONAPI.AcceptanceTests.EntityFrameworkTestWebApp
             configuration.RegisterEntityFrameworkResourceType<User>();
             configuration.RegisterEntityFrameworkResourceType<UserGroup>();
             configuration.RegisterResourceType<Sample>(); // Example of a resource type not controlled by EF
+            configuration.RegisterResourceType<Person>(c => c.AlwaysInclude(p => p.Address)); 
+            configuration.RegisterResourceType<Address>();
             configuration.RegisterMappedType<Starship, StarshipDto, StarshipDocumentMaterializer>(c =>
             {
                 c.ConfigureRelationship(s => s.Officers,
@@ -83,6 +85,7 @@ namespace JSONAPI.AcceptanceTests.EntityFrameworkTestWebApp
             };
 
             // Additional Web API routes
+            httpConfig.Routes.MapHttpRoute("Persons", "persons", new { Controller = "Persons" });
             httpConfig.Routes.MapHttpRoute("Samples", "samples", new { Controller = "Samples" });
             httpConfig.Routes.MapHttpRoute("Search", "search", new { Controller = "Search" });
             httpConfig.Routes.MapHttpRoute("Trees", "trees", new { Controller = "Trees" });

@@ -21,6 +21,7 @@ namespace JSONAPI.Configuration
             _resourceTypeRegistrar = resourceTypeRegistrar;
             RelationshipConfigurations = new ConcurrentDictionary<string, IResourceTypeRelationshipConfiguration>();
             ClrType = typeof (TResourceType);
+            IncludeRelationships = new List<string>();
         }
 
         public string ResourceTypeName { get; private set; }
@@ -30,6 +31,7 @@ namespace JSONAPI.Configuration
         public IDictionary<string, IResourceTypeRelationshipConfiguration> RelationshipConfigurations { get; private set; }
         public Func<ParameterExpression, string, BinaryExpression> FilterByIdExpressionFactory { get; private set; }
         public Func<ParameterExpression, Expression> SortByIdExpressionFactory { get; private set; }
+        public List<string> IncludeRelationships { get; private set; }
 
         public void ConfigureRelationship(Expression<Func<TResourceType, object>> property,
             Action<IResourceTypeRelationshipConfigurator> configurationAction)
@@ -44,6 +46,19 @@ namespace JSONAPI.Configuration
             configurationAction(config);
 
             RelationshipConfigurations[propertyInfo.Name] = config;
+        }
+
+        public void AlwaysInclude(Expression<Func<TResourceType, object>> property)
+        {
+            if (property == null) throw new ArgumentNullException("property");
+
+            var member = (MemberExpression)property.Body;
+            var propertyInfo = (PropertyInfo)member.Member;
+
+            if (!IncludeRelationships.Contains(propertyInfo.Name))
+            {
+                IncludeRelationships.Add(propertyInfo.Name.ToLower());
+            }
         }
 
         public void UseDocumentMaterializer<TMaterializer>()
@@ -75,7 +90,7 @@ namespace JSONAPI.Configuration
         public IResourceTypeRegistration BuildResourceTypeRegistration()
         {
             return _resourceTypeRegistrar.BuildRegistration(ClrType, ResourceTypeName, FilterByIdExpressionFactory,
-                SortByIdExpressionFactory);
+                SortByIdExpressionFactory, IncludeRelationships.ToArray());
         }
     }
 }

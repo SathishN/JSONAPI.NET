@@ -20,7 +20,7 @@ namespace JSONAPI.Core
         internal ResourceTypeRegistration(Type type, PropertyInfo idProperty, string resourceTypeName,
             IDictionary<string, ResourceTypeField> fields,
             Func<ParameterExpression, string, BinaryExpression> filterByIdExpressionFactory,
-            Func<ParameterExpression, Expression> sortByIdExpressionFactory)
+            Func<ParameterExpression, Expression> sortByIdExpressionFactory, string[] includeRelationships = null)
         {
             IdProperty = idProperty;
             Type = type;
@@ -30,6 +30,7 @@ namespace JSONAPI.Core
             Attributes = fields.Values.OfType<ResourceTypeAttribute>().ToArray();
             Relationships = fields.Values.OfType<ResourceTypeRelationship>().ToArray();
             _fields = new ReadOnlyDictionary<string, ResourceTypeField>(fields);
+            IncludeRelationships = includeRelationships;
         }
 
         public Type Type { get; private set; }
@@ -41,6 +42,8 @@ namespace JSONAPI.Core
         public ResourceTypeAttribute[] Attributes { get; private set; }
 
         public ResourceTypeRelationship[] Relationships { get; private set; }
+
+        public string[] IncludeRelationships { get; private set; }
 
         public string GetIdForResource(object resource)
         {

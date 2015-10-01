@@ -58,6 +58,18 @@ namespace JSONAPI.Documents.Builders
             var attributes = new Dictionary<string, JToken>();
             var relationships = new Dictionary<string, IRelationshipObject>();
 
+            var includePaths = new List<string>();
+
+            if (includePathExpressions != null && includePathExpressions.Length > 0)
+            {
+                includePaths.AddRange(includePathExpressions);
+            }
+
+            if (resourceTypeRegistration.IncludeRelationships != null && resourceTypeRegistration.IncludeRelationships.Length > 0)
+            {
+                includePaths.AddRange(resourceTypeRegistration.IncludeRelationships);
+            }
+
             foreach (var attribute in resourceTypeRegistration.Attributes)
             {
                 var propertyValue = attribute.GetValue(modelObject);
@@ -71,8 +83,8 @@ namespace JSONAPI.Documents.Builders
                 var childPath = currentPath == null
                     ? modelRelationship.JsonKey
                     : (currentPath + "." + modelRelationship.JsonKey);
-                if (includePathExpressions != null &&
-                    includePathExpressions.Any(e => PathExpressionMatchesCurrentPath(childPath, e)))
+                if (includePaths != null &&
+                    includePaths.Any(e => PathExpressionMatchesCurrentPath(childPath, e)))
                 {
                     if (modelRelationship.IsToMany)
                     {
@@ -97,7 +109,7 @@ namespace JSONAPI.Documents.Builders
                                 if (!idDictionary.TryGetValue(identifier.Id, out relatedResourceObject))
                                 {
                                     relatedResourceObject = CreateResourceObject(relatedResource, idDictionariesByType,
-                                        childPath, includePathExpressions, linkBaseUrl);
+                                        childPath, includePaths.ToArray(), linkBaseUrl);
                                     idDictionary[identifier.Id] = relatedResourceObject;
                                 }
                             }
@@ -122,7 +134,7 @@ namespace JSONAPI.Documents.Builders
                             if (!idDictionary.TryGetValue(identifier.Id, out relatedResourceObject))
                             {
                                 relatedResourceObject = CreateResourceObject(relatedResource, idDictionariesByType,
-                                    childPath, includePathExpressions, linkBaseUrl);
+                                    childPath, includePaths.ToArray(), linkBaseUrl);
                                 idDictionary[identifier.Id] = relatedResourceObject;
                             }
 

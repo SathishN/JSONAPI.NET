@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
@@ -40,6 +41,11 @@ namespace JSONAPI.Core
         /// </summary>
         /// <returns></returns>
         ResourceTypeRelationship[] Relationships { get; }
+
+        /// <summary>
+        /// Gets the relationships which are always included part of response
+        /// </summary>
+        string[] IncludeRelationships { get; }
 
         /// <summary>
         /// Gets the ID for a resource belonging to this resource type

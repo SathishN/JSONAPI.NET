@@ -121,7 +121,7 @@ namespace JSONAPI.Tests.Documents.Builders
             countryRegistration
                 .Setup(m => m.Relationships)
                 .Returns(() => new ResourceTypeRelationship[] { countryCities, countryProvinces, countryContinent });
-
+            countryRegistration.Setup(m => m.IncludeRelationships).Returns(new string[] { });
 
             // City registration
             var cityName =
@@ -132,8 +132,8 @@ namespace JSONAPI.Tests.Documents.Builders
             cityRegistration.Setup(m => m.GetIdForResource(It.IsAny<City>())).Returns((City c) => c.Id);
             cityRegistration.Setup(m => m.Attributes).Returns(new[] { cityName });
             cityRegistration.Setup(m => m.Relationships).Returns(new ResourceTypeRelationship[] { });
-
-
+            cityRegistration.Setup(m => m.IncludeRelationships).Returns(new string[] { });
+            
             // Province registration
             var provinceName =
                 new ResourceTypeAttribute(
@@ -146,7 +146,7 @@ namespace JSONAPI.Tests.Documents.Builders
             provinceRegistration
                 .Setup(m => m.Relationships)
                 .Returns(() => new ResourceTypeRelationship[] { provinceCapital });
-
+            provinceRegistration.Setup(m => m.IncludeRelationships).Returns(new string[] { });
 
             // Continent registration
             var continentName =
@@ -161,6 +161,7 @@ namespace JSONAPI.Tests.Documents.Builders
             continentRegistration
                 .Setup(m => m.Relationships)
                 .Returns(() => new ResourceTypeRelationship[] { continentCountries });
+            continentRegistration.Setup(m => m.IncludeRelationships).Returns(new string[] { });
 
             var mockRegistry = new Mock<IResourceTypeRegistry>(MockBehavior.Strict);
             mockRegistry.Setup(r => r.GetRegistrationForType(typeof(Country))).Returns(countryRegistration.Object);
