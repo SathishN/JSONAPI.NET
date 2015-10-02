@@ -30,7 +30,7 @@ namespace JSONAPI.Core
         public IResourceTypeRegistration BuildRegistration(Type type, string resourceTypeName = null,
             Func<ParameterExpression, string, BinaryExpression> filterByIdFactory = null,
             Func<ParameterExpression, Expression> sortByIdFactory = null,
-            string[] includeRelationships = null)
+            PropertyInfo[] includeRelationships = null)
         {
             if (resourceTypeName == null)
                 resourceTypeName = _namingConventions.GetResourceTypeNameForType(type);
@@ -89,8 +89,15 @@ namespace JSONAPI.Core
                 sortByIdFactory = param => Expression.Property(param, idProperty);
             }
 
+            var allincludeRelationships = new List<string>();
+
+            if (includeRelationships != null)
+            {
+                allincludeRelationships.AddRange(includeRelationships.Select(CreateResourceTypeField).Select(property => property.JsonKey));
+            }
+
             return new ResourceTypeRegistration(type, idProperty, resourceTypeName, fieldMap, filterByIdFactory,
-                sortByIdFactory, includeRelationships);
+                sortByIdFactory, allincludeRelationships.ToArray());
         }
 
         /// <summary>

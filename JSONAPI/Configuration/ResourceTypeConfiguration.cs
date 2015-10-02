@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using JSONAPI.Core;
@@ -21,7 +22,7 @@ namespace JSONAPI.Configuration
             _resourceTypeRegistrar = resourceTypeRegistrar;
             RelationshipConfigurations = new ConcurrentDictionary<string, IResourceTypeRelationshipConfiguration>();
             ClrType = typeof (TResourceType);
-            IncludeRelationships = new List<string>();
+            IncludeRelationships = new List<PropertyInfo>();
         }
 
         public string ResourceTypeName { get; private set; }
@@ -31,7 +32,7 @@ namespace JSONAPI.Configuration
         public IDictionary<string, IResourceTypeRelationshipConfiguration> RelationshipConfigurations { get; private set; }
         public Func<ParameterExpression, string, BinaryExpression> FilterByIdExpressionFactory { get; private set; }
         public Func<ParameterExpression, Expression> SortByIdExpressionFactory { get; private set; }
-        public List<string> IncludeRelationships { get; private set; }
+        public List<PropertyInfo> IncludeRelationships { get; private set; }
 
         public void ConfigureRelationship(Expression<Func<TResourceType, object>> property,
             Action<IResourceTypeRelationshipConfigurator> configurationAction)
@@ -55,9 +56,9 @@ namespace JSONAPI.Configuration
             var member = (MemberExpression)property.Body;
             var propertyInfo = (PropertyInfo)member.Member;
 
-            if (!IncludeRelationships.Contains(propertyInfo.Name))
+            if (IncludeRelationships.All(p => p.Name != propertyInfo.Name))
             {
-                IncludeRelationships.Add(propertyInfo.Name.ToLower());
+                IncludeRelationships.Add(propertyInfo);
             }
         }
 

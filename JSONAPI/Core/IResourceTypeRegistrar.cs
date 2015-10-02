@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace JSONAPI.Core
 {
@@ -15,6 +16,6 @@ namespace JSONAPI.Core
             string resourceTypeName = null,
             Func<ParameterExpression, string, BinaryExpression> filterByIdFactory = null,
             Func<ParameterExpression, Expression> sortByIdFactory = null,
-            string[] includeRelationships = null);
+            PropertyInfo[] includeRelationships = null);
     }
 }
